@@ -13,7 +13,7 @@
     --bg:#0d1117; --card:#161b22; --card2:#1c2330; --line:#2a3240;
     --txt:#e6edf3; --muted:#8b97a7; --accent:#3b82f6; --accent2:#22c55e;
     --deload:#f59e0b; --danger:#ef4444;
-    --biA:#3b82f6; --biB:#a855f7; --biC:#14b8a6;
+    --biA:#3b82f6; --biB:#a855f7; --biC:#14b8a6; --biD:#f97316; --biE:#ec4899; --biF:#84cc16;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
@@ -67,18 +67,31 @@
   .card.biset[data-bi="A"]{border-left-color:var(--biA)}
   .card.biset[data-bi="B"]{border-left-color:var(--biB)}
   .card.biset[data-bi="C"]{border-left-color:var(--biC)}
+  .card.biset[data-bi="D"]{border-left-color:var(--biD)}
+  .card.biset[data-bi="E"]{border-left-color:var(--biE)}
+  .card.biset[data-bi="F"]{border-left-color:var(--biF)}
   .card.biset.cont{margin-top:-6px;border-top-left-radius:0;border-top-right-radius:0}
   .biset-tag{
     display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;
     color:#0d1117;margin-bottom:6px;
   }
   .biset-tag.A{background:var(--biA)} .biset-tag.B{background:var(--biB)} .biset-tag.C{background:var(--biC)}
+  .biset-tag.D{background:var(--biD)} .biset-tag.E{background:var(--biE)} .biset-tag.F{background:var(--biF)}
   .ex-name{font-size:15px;font-weight:700;line-height:1.25}
   .ex-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .chip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:7px;background:var(--card2);color:var(--muted)}
   .chip.sets{color:var(--txt)}
   .chip.muscle{color:#93c5fd;background:rgba(59,130,246,.12)}
-  .inputs{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:12px;align-items:end}
+  .lastweek{
+    display:flex;align-items:center;gap:8px;margin-top:10px;
+    background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.28);border-radius:10px;
+    padding:7px 10px;font-size:12px;color:#bbf7d0;font-weight:600;
+  }
+  .lastweek .tagw{font-size:10px;font-weight:800;color:#0d1117;background:var(--accent2);border-radius:6px;padding:2px 6px;white-space:nowrap}
+  .lastweek .vals b{color:#eafff1;font-weight:800}
+  .lastweek.empty{background:var(--card2);border-color:var(--line);color:var(--muted)}
+  .lastweek.empty .tagw{background:var(--muted)}
+  .inputs{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:10px;align-items:end}
   .field label{display:block;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
   .field input{
     width:100%; background:var(--card2); border:1px solid var(--line); border-radius:10px;
@@ -134,21 +147,49 @@
     padding:12px 16px;border-radius:12px;flex:1;max-width:120px;
   }
   .quickbar button:active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* Done check + resumo */
+  .h-actions{display:flex;align-items:center;gap:10px}
+  .resumo-btn{background:var(--card);border:1px solid var(--line);color:var(--txt);font-weight:700;font-size:12px;padding:7px 11px;border-radius:9px}
+  .resumo-btn:active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .donebtn{border:1.5px solid var(--accent2);background:transparent;color:var(--accent2);font-weight:800;font-size:13px;padding:10px 14px;border-radius:11px;white-space:nowrap}
+  .donebtn.done{background:var(--accent2);color:#062a12;border-color:var(--accent2)}
+  .donebtn:active{transform:scale(.97)}
+  .tab .tk{color:var(--accent2);font-weight:900}
+  .tab.active .tk{color:#eafff1}
+  .modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);display:none;align-items:flex-end;justify-content:center}
+  .sheet{background:var(--card);width:100%;max-width:560px;border-radius:18px 18px 0 0;border:1px solid var(--line);
+    padding:16px 16px calc(env(safe-area-inset-bottom) + 20px);max-height:85vh;overflow:auto}
+  .sheethead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:16px;font-weight:800}
+  .sheethead button{background:var(--card2);border:1px solid var(--line);color:var(--txt);width:34px;height:34px;border-radius:9px;font-size:15px}
+  .scards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .scard{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .scard .n{font-size:26px;font-weight:800;color:var(--accent2)}
+  .scard .l{font-size:11px;color:var(--muted);font-weight:600;margin-top:3px}
+  .sbreak{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin:6px 2px 12px}
+  .srow{display:grid;grid-template-columns:1fr auto;gap:5px 10px;align-items:center;margin-bottom:11px;font-size:13px}
+  .srow.dl span{color:var(--deload)}
+  .srow b{color:var(--txt);font-variant-numeric:tabular-nums}
+  .sbar{grid-column:1/3;height:6px;background:var(--card2);border-radius:99px;overflow:hidden}
+  .sbar i{display:block;height:100%;background:var(--accent2)}
 </style>
 </head>
 <body>
 <header>
   <div class="h-title">
-    <h1>Plano de Treino</h1>
-    <span class="h-sub" id="saved">salvo ✓</span>
+    <h1 id="appTitle">Plano de Treino</h1>
+    <div class="h-actions">
+      <button class="resumo-btn" onclick="openSummary()">📊 Resumo</button>
+      <span class="h-sub" id="saved">salvo ✓</span>
+    </div>
   </div>
   <div class="tabs" id="tabs"></div>
   <div class="weekbar" id="weekbar"></div>
 </header>
 
 <main>
-  <div class="dayhead"><div class="name" id="dayName"></div></div>
-  <div id="deloadNote" class="deload-note" style="display:none">Semana de DELOAD — reduza carga (~70%) e volume. Recuperação.</div>
+  <div class="dayhead"><div class="name" id="dayName"></div><button id="doneBtn" class="donebtn" onclick="toggleDone()">Marcar como feito</button></div>
+  <div id="deloadNote" class="deload-note" style="display:none">Semana de DELOAD — reduza carga e volume. Recuperação.</div>
   <div id="list"></div>
 </main>
 
@@ -156,6 +197,13 @@
   <button onclick="startTimer(60,'Descanso 60s')">60s</button>
   <button onclick="startTimer(90,'Descanso 90s')">90s</button>
   <button onclick="startTimer(120,'Descanso 120s')">120s</button>
+</div>
+
+<div id="summary" class="modal" onclick="if(event.target===this)closeSummary()">
+  <div class="sheet">
+    <div class="sheethead"><span>📊 Resumo de treinos</span><button onclick="closeSummary()">✕</button></div>
+    <div id="summaryBody"></div>
+  </div>
 </div>
 
 <div id="timer">
@@ -173,8 +221,9 @@
 </div>
 
 <script>
-const DATA = {"weeks": 8, "deload": [4, 8], "days": [{"title": "DIA 1 - PUSH", "exercises": [{"name": "1. Supino reto com halteres (pegada livre/neutra)", "sets": "4 x 8-10", "rest": "60-75s", "restSec": 75, "muscle": "Peito", "biset": null}, {"name": "A1. Crucifixo na MÁQUINA / peck deck", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Peito", "biset": "A"}, {"name": "A2. Supino inclinado com HALTERES", "sets": "3 x 10-12", "rest": "60s", "restSec": 60, "muscle": "Peito superior", "biset": "A"}, {"name": "B1. Desenvolvimento na MÁQUINA (neutro)", "sets": "3 x 10-12", "rest": "—", "restSec": 0, "muscle": "Ombro", "biset": "B"}, {"name": "B2. Elevação lateral com HALTERES", "sets": "3 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Deltoide medial", "biset": "B"}, {"name": "C1. Tríceps corda na POLIA", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Tríceps", "biset": "C"}, {"name": "C2. Tríceps coice com HALTER (neutro)", "sets": "3 x 12-15", "rest": "45-60s", "restSec": 60, "muscle": "Tríceps", "biset": "C"}]}, {"title": "DIA 2 - PULL", "exercises": [{"name": "1. Puxada alta pegada neutra (triângulo) c/ straps", "sets": "4 x 10-12", "rest": "60-75s", "restSec": 75, "muscle": "Dorsais", "biset": null}, {"name": "A1. Remada na MÁQUINA pegada neutra", "sets": "3 x 10-12", "rest": "—", "restSec": 0, "muscle": "Costas", "biset": "A"}, {"name": "A2. Remada unilateral com HALTER (serrote)", "sets": "3 x 10-12/lado", "rest": "60s", "restSec": 60, "muscle": "Costas", "biset": "A"}, {"name": "B1. Pullover na POLIA com corda", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Dorsais", "biset": "B"}, {"name": "B2. Crucifixo invertido com HALTERES (banco incl.)", "sets": "3 x 15", "rest": "60s", "restSec": 60, "muscle": "Deltoide posterior", "biset": "B"}, {"name": "C1. Rosca na POLIA com corda (neutra)", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Bíceps", "biset": "C"}, {"name": "C2. Rosca martelo com HALTERES", "sets": "3 x 10-12", "rest": "45-60s", "restSec": 60, "muscle": "Bíceps", "biset": "C"}]}, {"title": "DIA 3 - LOWER A", "exercises": [{"name": "1. Cadeira extensora (pré-ativação)", "sets": "3 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Quadríceps", "biset": null}, {"name": "2. Leg press pés largura quadril, ~90° controlado", "sets": "4 x 10-12", "rest": "75s", "restSec": 75, "muscle": "Quadríceps/glúteo", "biset": null}, {"name": "3. Hack machine, amplitude parcial confortável", "sets": "3 x 10-12", "rest": "60s", "restSec": 60, "muscle": "Quadríceps", "biset": null}, {"name": "A1. Mesa flexora deitada (MÁQUINA)", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Posteriores", "biset": "A"}, {"name": "A2. Stiff com HALTERES (pegada neutra)", "sets": "3 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Posterior/glúteo", "biset": "A"}, {"name": "4. Panturrilha em pé na máquina", "sets": "4 x 12-15", "rest": "45s", "restSec": 45, "muscle": "Panturrilha", "biset": null}]}, {"title": "DIA 4 - UPPER B", "exercises": [{"name": "1. Desenvolvimento na máquina, pegada neutra", "sets": "4 x 10-12", "rest": "60s", "restSec": 60, "muscle": "Ombro", "biset": null}, {"name": "A1. Remada alta na POLIA c/ corda, cotovelos baixos", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Deltoide/trapézio", "biset": "A"}, {"name": "A2. Elevação lateral com HALTERES", "sets": "4 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Deltoide medial", "biset": "A"}, {"name": "B1. Supino na MÁQUINA convergente", "sets": "3 x 10-12", "rest": "—", "restSec": 0, "muscle": "Peito", "biset": "B"}, {"name": "B2. Remada unilateral com HALTER (serrote)", "sets": "3 x 10-12/lado", "rest": "60s", "restSec": 60, "muscle": "Costas", "biset": "B"}, {"name": "C1. Tríceps na POLIA (barra V/corda neutra)", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Tríceps", "biset": "C"}, {"name": "C2. Rosca martelo com HALTERES", "sets": "3 x 12-15", "rest": "45-60s", "restSec": 60, "muscle": "Bíceps", "biset": "C"}]}, {"title": "DIA 5 - LOWER B", "exercises": [{"name": "1. Elevação pélvica / hip thrust (máquina ou barra)", "sets": "4 x 10-12", "rest": "75s", "restSec": 75, "muscle": "Glúteo", "biset": null}, {"name": "2. Stiff/RDL com HALTERES neutro c/ straps", "sets": "3 x 10-12", "rest": "75s", "restSec": 75, "muscle": "Posterior/glúteo", "biset": null}, {"name": "3. Mesa flexora deitada", "sets": "3 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Posteriores", "biset": null}, {"name": "A1. Cadeira extensora (MÁQUINA)", "sets": "3 x 15", "rest": "—", "restSec": 0, "muscle": "Quadríceps", "biset": "A"}, {"name": "A2. Panturrilha em pé com HALTERES", "sets": "3 x 15-20", "rest": "60s", "restSec": 60, "muscle": "Panturrilha", "biset": "A"}, {"name": "4. Glúteo no cabo/máquina (kickback)", "sets": "3 x 15/lado", "rest": "45s", "restSec": 45, "muscle": "Glúteo", "biset": null}, {"name": "5. Prancha + abdominal na polia c/ corda", "sets": "3x30-45s / 3x15", "rest": "45s", "restSec": 45, "muscle": "Core", "biset": null}]}]};
-const STORE = 'treino_renan_v1';
+const DATA = {"store": "treino_renan_v1", "appTitle": "Treino · Renan", "weeks": 8, "deload": [4, 8], "days": [{"title": "Dia 1 · Push", "short": "PUSH", "exercises": [{"name": "1. Supino reto com halteres (pegada livre/neutra)", "sets": "4 x 8-10", "rest": "60-75s", "restSec": 75, "muscle": "Peito", "biset": null}, {"name": "A1. Crucifixo na MÁQUINA / peck deck", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Peito", "biset": "A"}, {"name": "A2. Supino inclinado com HALTERES", "sets": "3 x 10-12", "rest": "60s", "restSec": 60, "muscle": "Peito superior", "biset": "A"}, {"name": "B1. Desenvolvimento na MÁQUINA (neutro)", "sets": "3 x 10-12", "rest": "—", "restSec": 0, "muscle": "Ombro", "biset": "B"}, {"name": "B2. Elevação lateral com HALTERES", "sets": "3 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Deltoide medial", "biset": "B"}, {"name": "C1. Tríceps corda na POLIA", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Tríceps", "biset": "C"}, {"name": "C2. Tríceps coice com HALTER (neutro)", "sets": "3 x 12-15", "rest": "45-60s", "restSec": 60, "muscle": "Tríceps", "biset": "C"}]}, {"title": "Dia 2 · Pull", "short": "PULL", "exercises": [{"name": "1. Puxada alta pegada neutra (triângulo) c/ straps", "sets": "4 x 10-12", "rest": "60-75s", "restSec": 75, "muscle": "Dorsais", "biset": null}, {"name": "A1. Remada na MÁQUINA pegada neutra", "sets": "3 x 10-12", "rest": "—", "restSec": 0, "muscle": "Costas", "biset": "A"}, {"name": "A2. Remada unilateral com HALTER (serrote)", "sets": "3 x 10-12/lado", "rest": "60s", "restSec": 60, "muscle": "Costas", "biset": "A"}, {"name": "B1. Pullover na POLIA com corda", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Dorsais", "biset": "B"}, {"name": "B2. Crucifixo invertido com HALTERES (banco incl.)", "sets": "3 x 15", "rest": "60s", "restSec": 60, "muscle": "Deltoide posterior", "biset": "B"}, {"name": "C1. Rosca na POLIA com corda (neutra)", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Bíceps", "biset": "C"}, {"name": "C2. Rosca martelo com HALTERES", "sets": "3 x 10-12", "rest": "45-60s", "restSec": 60, "muscle": "Bíceps", "biset": "C"}]}, {"title": "Dia 3 · Lower A", "short": "LOWER A", "exercises": [{"name": "1. Cadeira extensora (pré-ativação)", "sets": "3 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Quadríceps", "biset": null}, {"name": "2. Leg press pés largura quadril, ~90° controlado", "sets": "4 x 10-12", "rest": "75s", "restSec": 75, "muscle": "Quadríceps/glúteo", "biset": null}, {"name": "3. Hack machine, amplitude parcial confortável", "sets": "3 x 10-12", "rest": "60s", "restSec": 60, "muscle": "Quadríceps", "biset": null}, {"name": "A1. Mesa flexora deitada (MÁQUINA)", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Posteriores", "biset": "A"}, {"name": "A2. Stiff com HALTERES (pegada neutra)", "sets": "3 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Posterior/glúteo", "biset": "A"}, {"name": "4. Panturrilha em pé na máquina", "sets": "4 x 12-15", "rest": "45s", "restSec": 45, "muscle": "Panturrilha", "biset": null}]}, {"title": "Dia 4 · Upper B", "short": "UPPER B", "exercises": [{"name": "1. Desenvolvimento na máquina, pegada neutra", "sets": "4 x 10-12", "rest": "60s", "restSec": 60, "muscle": "Ombro", "biset": null}, {"name": "A1. Remada alta na POLIA c/ corda, cotovelos baixos", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Deltoide/trapézio", "biset": "A"}, {"name": "A2. Elevação lateral com HALTERES", "sets": "4 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Deltoide medial", "biset": "A"}, {"name": "B1. Supino na MÁQUINA convergente", "sets": "3 x 10-12", "rest": "—", "restSec": 0, "muscle": "Peito", "biset": "B"}, {"name": "B2. Remada unilateral com HALTER (serrote)", "sets": "3 x 10-12/lado", "rest": "60s", "restSec": 60, "muscle": "Costas", "biset": "B"}, {"name": "C1. Tríceps na POLIA (barra V/corda neutra)", "sets": "3 x 12-15", "rest": "—", "restSec": 0, "muscle": "Tríceps", "biset": "C"}, {"name": "C2. Rosca martelo com HALTERES", "sets": "3 x 12-15", "rest": "45-60s", "restSec": 60, "muscle": "Bíceps", "biset": "C"}]}, {"title": "Dia 5 · Lower B", "short": "LOWER B", "exercises": [{"name": "1. Elevação pélvica / hip thrust (máquina ou barra)", "sets": "4 x 10-12", "rest": "75s", "restSec": 75, "muscle": "Glúteo", "biset": null}, {"name": "2. Stiff/RDL com HALTERES neutro c/ straps", "sets": "3 x 10-12", "rest": "75s", "restSec": 75, "muscle": "Posterior/glúteo", "biset": null}, {"name": "3. Mesa flexora deitada", "sets": "3 x 12-15", "rest": "60s", "restSec": 60, "muscle": "Posteriores", "biset": null}, {"name": "A1. Cadeira extensora (MÁQUINA)", "sets": "3 x 15", "rest": "—", "restSec": 0, "muscle": "Quadríceps", "biset": "A"}, {"name": "A2. Panturrilha em pé com HALTERES", "sets": "3 x 15-20", "rest": "60s", "restSec": 60, "muscle": "Panturrilha", "biset": "A"}, {"name": "4. Glúteo no cabo/máquina (kickback)", "sets": "3 x 15/lado", "rest": "45s", "restSec": 45, "muscle": "Glúteo", "biset": null}, {"name": "5. Prancha + abdominal na polia c/ corda", "sets": "3x30-45s / 3x15", "rest": "45s", "restSec": 45, "muscle": "Core", "biset": null}]}]};
+const STORE = DATA.store || 'treino_renan_v1';
+if(DATA.appTitle){ document.getElementById('appTitle').textContent=DATA.appTitle; document.title=DATA.appTitle; }
 let state = load();
 let day = state.day ?? 0;
 let week = state.week ?? 1;
@@ -185,18 +234,61 @@ let savedT;
 function flashSaved(){ const el=document.getElementById('saved'); el.style.opacity=1; clearTimeout(savedT); savedT=setTimeout(()=>el.style.opacity=.35,900); }
 
 function cell(d,w,i){ return (((state.data||{})[d]||{})[w]||{})[i] || {}; }
+function lastFilled(d,w,i){
+  for(let x=w-1;x>=1;x--){ const c=cell(d,x,i); if(c.carga||c.reps) return {w:x,carga:c.carga,reps:c.reps}; }
+  return null;
+}
+function isDone(d,w){ return !!(((state.done||{})[d]||{})[w]); }
+function toggleDone(){
+  state.done=state.done||{}; state.done[day]=state.done[day]||{};
+  if(state.done[day][week]) delete state.done[day][week];
+  else state.done[day][week]=Date.now();
+  save(); renderTabs(); renderDoneBtn();
+}
+function fmtDate(ms){ return new Date(ms).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); }
+function renderDoneBtn(){
+  const b=document.getElementById('doneBtn'); if(!b)return;
+  const done=isDone(day,week);
+  b.className='donebtn'+(done?' done':'');
+  b.textContent=done ? '✓ Feito '+fmtDate(state.done[day][week]) : 'Marcar como feito';
+}
+function openSummary(){
+  const done=state.done||{}, nd=DATA.days.length;
+  const now=Date.now(), wk7=now-7*864e5;
+  const D=new Date(), m0=new Date(D.getFullYear(),D.getMonth(),1).getTime();
+  let total=0,last7=0,month=0; const perWeek={};
+  Object.keys(done).forEach(d=>Object.keys(done[d]).forEach(w=>{
+    const ts=done[d][w]; total++; if(ts>=wk7)last7++; if(ts>=m0)month++;
+    perWeek[w]=(perWeek[w]||0)+1;
+  }));
+  let cur=0; for(let i=0;i<nd;i++) if(isDone(i,week))cur++;
+  let rows='';
+  for(let w=1;w<=DATA.weeks;w++){
+    const c=perWeek[w]||0, dl=DATA.deload.includes(w);
+    rows+=`<div class="srow${dl?' dl':''}"><span>Semana ${w}${dl?' · deload':''}</span><b>${c}/${nd}</b><div class="sbar"><i style="width:${Math.round(c/nd*100)}%"></i></div></div>`;
+  }
+  document.getElementById('summaryBody').innerHTML=`
+    <div class="scards">
+      <div class="scard"><div class="n">${cur}/${nd}</div><div class="l">Semana ${week} (atual)</div></div>
+      <div class="scard"><div class="n">${last7}</div><div class="l">Últimos 7 dias</div></div>
+      <div class="scard"><div class="n">${month}</div><div class="l">Este mês</div></div>
+      <div class="scard"><div class="n">${total}</div><div class="l">Total no ciclo</div></div>
+    </div>
+    <div class="sbreak">Treinos por semana do plano</div>
+    ${rows}`;
+  document.getElementById('summary').style.display='flex';
+}
+function closeSummary(){ document.getElementById('summary').style.display='none'; }
 function setCell(d,w,i,k,v){
   state.data=state.data||{}; state.data[d]=state.data[d]||{}; state.data[d][w]=state.data[d][w]||{};
   state.data[d][w][i]=state.data[d][w][i]||{}; state.data[d][w][i][k]=v; save();
 }
 
-const shortNames=['PUSH','PULL','LOWER A','UPPER B','LOWER B'];
-
 function renderTabs(){
   const t=document.getElementById('tabs'); t.innerHTML='';
   DATA.days.forEach((d,i)=>{
     const b=document.createElement('button');
-    b.className='tab'+(i===day?' active':''); b.textContent='D'+(i+1)+' · '+(shortNames[i]||'');
+    b.className='tab'+(i===day?' active':''); b.innerHTML='D'+(i+1)+' · '+(d.short||'')+(isDone(i,week)?' <span class="tk">✓</span>':'');
     b.onclick=()=>{day=i;save();renderAll();window.scrollTo(0,0)}; t.appendChild(b);
   });
 }
@@ -212,7 +304,7 @@ function renderWeeks(){
 }
 function renderList(){
   const d=DATA.days[day];
-  document.getElementById('dayName').textContent=d.title.replace(/^DIA \d+ - /,'Dia '+(day+1)+' · ');
+  document.getElementById('dayName').textContent=d.title;
   document.getElementById('deloadNote').style.display=DATA.deload.includes(week)?'block':'none';
   const list=document.getElementById('list'); list.innerHTML='';
   d.exercises.forEach((ex,i)=>{
@@ -230,6 +322,11 @@ function renderList(){
     const nextBi = (i+1<d.exercises.length)?d.exercises[i+1].biset:null;
     const linkHtml = (ex.biset && ex.biset===nextBi)
       ? `<div class="biset-link">↳ bi-set: emenda direto no próximo (<b>sem descanso</b>)</div>` : '';
+    const last=lastFilled(day,week,i);
+    const lastHtml = week>1 ? (last
+      ? `<div class="lastweek"><span class="tagw">SEM ${last.w}</span><span class="vals">Semana passada: <b>${last.carga||'—'} kg</b> · <b>${last.reps||'—'} reps</b></span></div>`
+      : `<div class="lastweek empty"><span class="tagw">—</span><span class="vals">Sem registro anterior</span></div>`)
+      : '';
     card.innerHTML = `
       ${showTag?`<span class="biset-tag ${ex.biset}">BI-SET ${ex.biset}</span>`:''}
       <div class="ex-name">${ex.name}</div>
@@ -238,75 +335,70 @@ function renderList(){
         <span class="chip muscle">${ex.muscle}</span>
         <span class="chip">⏱ ${ex.rest}</span>
       </div>
+      ${lastHtml}
       <div class="inputs">
         <div class="field">
           <label>Carga (kg)</label>
-          <input inputmode="decimal" placeholder="—" value="${c.carga??''}"
+          <input inputmode="decimal" placeholder="${last&&last.carga?last.carga:'—'}" value="${c.carga??''}"
             oninput="onInput(${i},'carga',this)" class="${c.carga?'filled':''}">
-          <div class="prev" id="prev-${i}"></div>
         </div>
         <div class="field">
           <label>Reps feitas</label>
-          <input inputmode="numeric" placeholder="—" value="${c.reps??''}"
+          <input inputmode="numeric" placeholder="${last&&last.reps?last.reps:'—'}" value="${c.reps??''}"
             oninput="onInput(${i},'reps',this)" class="${c.reps?'filled':''}">
-          <div class="prev">&nbsp;</div>
         </div>
         ${restHtml}
       </div>
       ${linkHtml}
     `;
     list.appendChild(card);
-    // previous week hint
-    if(week>1){
-      const p=cell(day,week-1,i);
-      const pe=card.querySelector('#prev-'+i);
-      if(p.carga) pe.textContent='sem '+(week-1)+': '+p.carga+'kg'+(p.reps?' × '+p.reps:'');
-    }
   });
 }
 function onInput(i,k,el){
   setCell(day,week,i,k,el.value);
   el.classList.toggle('filled', !!el.value);
 }
-function renderAll(){ renderTabs(); renderWeeks(); renderList(); }
+function renderAll(){ renderTabs(); renderWeeks(); renderList(); renderDoneBtn(); }
 
 /* ---------- Rest timer ---------- */
-let total=60,left=60,tick=null,paused=false;
+let total=60,left=60,tick=null,paused=false,alerted=false,endAt=0;
 const tEl=document.getElementById('timer');
-function fmt(s){const m=Math.floor(s/60),ss=s%60;return String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0')}
+function fmt(s){s=Math.abs(s);const m=Math.floor(s/60),ss=s%60;return String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0')}
 function draw(){
-  document.getElementById('tTime').textContent=fmt(Math.max(0,left));
-  const pct=Math.max(0,left/total*100);
+  const t=document.getElementById('tTime');
+  t.textContent=(left<0?'−':'')+fmt(left);
+  const pct=total>0?Math.max(0,Math.min(100,left/total*100)):0;
   const fill=document.getElementById('tFill'); fill.style.width=pct+'%';
   const low=left<=10;
   fill.classList.toggle('low',low);
-  document.getElementById('tTime').classList.toggle('low',low);
+  t.classList.toggle('low',low);
 }
 function startTimer(sec,label){
-  total=sec;left=sec;paused=false;
+  total=sec;left=sec;paused=false;alerted=false;
+  tEl.dataset.label=label||'Descanso';
   document.getElementById('tLabel').textContent=label||'Descanso';
   document.getElementById('tPause').textContent='Pausar';
   tEl.classList.remove('done'); tEl.classList.add('show');
+  endAt=Date.now()+sec*1000;
   draw(); clearInterval(tick);
-  const end=Date.now()+sec*1000; let endAt=end;
   tick=setInterval(()=>{
-    if(paused){endAt+=1000;return}
+    if(paused){endAt+=250;return}
     left=Math.round((endAt-Date.now())/1000);
     draw();
-    if(left<=0){finish()}
+    if(left<=0 && !alerted){ alerted=true; alarm(); }
   },250);
   if(navigator.vibrate)navigator.vibrate(20);
 }
-function togglePause(){ paused=!paused; document.getElementById('tPause').textContent=paused?'Continuar':'Pausar'; }
-function adjust(d){ left+=d; total=Math.max(total,left); if(left<0)left=0; draw(); }
-function stopTimer(){ clearInterval(tick); tEl.classList.remove('show','done'); }
-function finish(){
-  clearInterval(tick); left=0; draw();
+function alarm(){
   tEl.classList.add('done');
   if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
   beep();
-  setTimeout(()=>{ tEl.classList.remove('show','done'); }, 2500);
+  document.getElementById('tLabel').textContent='⚠ Passou do descanso';
+  setTimeout(()=>tEl.classList.remove('done'),1600);
 }
+function togglePause(){ paused=!paused; document.getElementById('tPause').textContent=paused?'Continuar':'Pausar'; }
+function adjust(d){ endAt+=d*1000; left=Math.round((endAt-Date.now())/1000); if(total>0)total=Math.max(total,left); draw(); }
+function stopTimer(){ clearInterval(tick); tEl.classList.remove('show','done'); }
 let actx;
 function beep(){
   try{
