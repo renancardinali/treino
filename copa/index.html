@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a7d2c">
+<title>Álbum Copa 2026 — Figurinhas que faltam</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Copa 2026">
+<style>
+  :root{
+    --verde:#0a7d2c;
+    --verde-esc:#075f21;
+    --falta:#ffffff;
+    --falta-borda:#d8dce0;
+    --repetida:#ffb703;
+    --texto:#1c2430;
+    --cinza:#6b7683;
+    --fundo:#f2f4f7;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--fundo);color:var(--texto);padding-bottom:88px;
+  }
+  header{
+    position:sticky;top:0;z-index:20;background:var(--verde);color:#fff;
+    padding:12px 14px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
+  header h1{margin:0;font-size:17px;font-weight:700;}
+  .barra-wrap{margin-top:9px;background:rgba(255,255,255,.25);border-radius:20px;height:11px;overflow:hidden;}
+  .barra{height:100%;background:#fff;width:0%;border-radius:20px;transition:width .25s ease;}
+  .stats{display:flex;gap:7px;margin-top:9px;}
+  .stat{flex:1;background:rgba(255,255,255,.15);border-radius:11px;padding:7px 4px;text-align:center;}
+  .stat b{display:block;font-size:19px;line-height:1.1;}
+  .stat span{font-size:11px;opacity:.9;}
+
+  .toolbar{position:sticky;top:0;z-index:10;background:var(--fundo);padding:9px 12px 3px;display:flex;flex-direction:column;gap:8px;}
+  .filtros{display:flex;gap:6px;}
+  .filtros button{flex:1;border:1px solid var(--falta-borda);background:#fff;color:var(--texto);padding:8px 4px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;}
+  .filtros button.ativo{background:var(--verde);color:#fff;border-color:var(--verde);}
+  .busca-row{display:flex;gap:6px;}
+  .busca-row input{flex:1;border:1px solid var(--falta-borda);border-radius:10px;padding:10px 12px;font-size:15px;outline:none;}
+  .busca-row input:focus{border-color:var(--verde);}
+
+  .secoes{padding:6px 12px 20px;}
+  .secao{background:#fff;border:1px solid var(--falta-borda);border-radius:14px;margin-bottom:10px;overflow:hidden;}
+  .sec-head{display:flex;align-items:center;gap:10px;padding:11px 12px;cursor:pointer;user-select:none;}
+  .sec-head .flag{width:30px;height:20px;border-radius:3px;object-fit:cover;flex:none;background:#eee;box-shadow:0 0 0 1px rgba(0,0,0,.08);}
+  .sec-head .esp{width:30px;height:20px;border-radius:3px;flex:none;display:flex;align-items:center;justify-content:center;font-size:14px;background:var(--verde-esc);}
+  .sec-head .nome{font-weight:700;font-size:15px;flex:1;}
+  .sec-head .gtag{font-size:10.5px;font-weight:800;color:var(--verde-esc);background:var(--verde-esc);color:#fff;border-radius:6px;padding:2px 6px;flex:none;letter-spacing:.3px;}
+  .sec-head .prog{font-size:12.5px;color:var(--cinza);font-weight:600;margin-right:2px;}
+  .sec-head .chev{color:var(--cinza);font-size:13px;transition:transform .2s;}
+  .secao.fechada .chev{transform:rotate(-90deg);}
+  .secao.completa .sec-head .prog{color:var(--verde);}
+  .mini{height:4px;background:var(--falta-borda);}
+  .mini > i{display:block;height:100%;background:var(--verde);width:0%;transition:width .2s;}
+  .sec-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:7px;padding:10px;}
+  .secao.fechada .sec-body,.secao.fechada .mini{display:none;}
+
+  .cel{position:relative;aspect-ratio:1/1;border:1px solid var(--falta-borda);background:var(--falta);color:var(--cinza);border-radius:11px;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:transform .05s ease;}
+  .cel:active{transform:scale(.9);}
+  .cel.tenho{background:var(--verde);color:#fff;border-color:var(--verde);}
+  .cel .badge{position:absolute;top:-6px;right:-6px;background:var(--repetida);color:#3a2c00;font-size:10.5px;font-weight:800;min-width:19px;height:19px;padding:0 4px;border-radius:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.25);}
+  .vazio{padding:36px 20px;text-align:center;color:var(--cinza);font-size:15px;}
+
+  .rodape{position:fixed;left:0;right:0;bottom:0;z-index:15;background:#fff;border-top:1px solid var(--falta-borda);padding:10px 12px;display:flex;gap:8px;padding-bottom:calc(10px + env(safe-area-inset-bottom));}
+  .rodape button{flex:1;border:none;border-radius:12px;padding:12px 6px;font-size:13.5px;font-weight:700;cursor:pointer;}
+  .btn-copiar{background:var(--verde);color:#fff;}
+  .btn-config{background:#eceff3;color:var(--texto);}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:none;align-items:flex-end;justify-content:center;}
+  .modal-bg.on{display:flex;}
+  .modal{background:#fff;width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));max-height:85vh;overflow:auto;animation:sobe .2s ease;}
+  @keyframes sobe{from{transform:translateY(30px);opacity:.6;}to{transform:translateY(0);opacity:1;}}
+  .modal h2{margin:0 0 4px;font-size:17px;}
+  .modal p{margin:0 0 14px;font-size:13px;color:var(--cinza);line-height:1.5;}
+  .modal .acoes{display:flex;gap:8px;margin-top:8px;}
+  .modal .acoes button{flex:1;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;}
+  .fechar{background:#eceff3;color:var(--texto);}
+  .zerar{background:#fdecec;color:#c62828;margin-top:10px;width:100%;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;}
+  .dica{font-size:12.5px;color:var(--cinza);margin-top:6px;line-height:1.6;}
+  .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:#1c2430;color:#fff;padding:10px 18px;border-radius:30px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90%;text-align:center;}
+  .toast.on{opacity:1;}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚽ Álbum Copa 2026</h1>
+  <div class="barra-wrap"><div class="barra" id="barra"></div></div>
+  <div class="stats">
+    <div class="stat"><b id="st-tenho">0</b><span>tenho</span></div>
+    <div class="stat"><b id="st-falta">0</b><span>faltam</span></div>
+    <div class="stat"><b id="st-rep">0</b><span>repetidas</span></div>
+    <div class="stat"><b id="st-pct">0%</b><span>completo</span></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="filtros">
+    <button data-f="todas" class="ativo">Todas</button>
+    <button data-f="falta">Só faltam</button>
+    <button data-f="tenho">Só tenho</button>
+    <button data-f="rep">Repetidas</button>
+  </div>
+  <div class="busca-row">
+    <input id="busca" type="text" placeholder="Buscar seleção (ex: Brasil)…">
+  </div>
+</div>
+
+<div class="secoes" id="secoes"></div>
+<div class="vazio" id="vazio" style="display:none;"></div>
+
+<div class="rodape">
+  <button class="btn-config" id="abrirConfig">⚙️ Configurar</button>
+  <button class="btn-copiar" id="copiarFalta">📋 Copiar as que faltam</button>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2>Configurar / Ajuda</h2>
+    <p>
+      <b>Como marcar cada figurinha:</b><br>
+      • 1 toque = <b>tenho</b> (fica verde).<br>
+      • Tocar de novo = <b>repetida</b> (bolinha amarela com a quantidade).<br>
+      • Segurar o dedo = volta pra <b>falta</b>.<br>
+      Toque no nome do país para <b>recolher/expandir</b> aquela seção.<br>
+      Seu progresso fica salvo automaticamente neste aparelho.
+    </p>
+    <div class="dica" id="resumoConfig"></div>
+    <div class="acoes">
+      <button class="fechar" id="fecharConfig">Fechar</button>
+    </div>
+    <button class="zerar" id="zerarTudo">🗑️ Zerar tudo (recomeçar do zero)</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  // ---- Estrutura do álbum ----
+  // 48 seleções (20 figurinhas cada) + FWC (20) + Coca-Cola (14) = 994
+  // Ordem oficial do álbum: por grupo (A a L)
+  var PAISES=[
+    // Grupo A
+    ["México","mx"],["África do Sul","za"],["Coreia do Sul","kr"],["Chéquia","cz"],
+    // Grupo B
+    ["Canadá","ca"],["Bósnia e Herzegovina","ba"],["Catar","qa"],["Suíça","ch"],
+    // Grupo C
+    ["Brasil","br"],["Marrocos","ma"],["Haiti","ht"],["Escócia","gb-sct"],
+    // Grupo D
+    ["Estados Unidos","us"],["Paraguai","py"],["Austrália","au"],["Turquia","tr"],
+    // Grupo E
+    ["Alemanha","de"],["Curaçao","cw"],["Costa do Marfim","ci"],["Equador","ec"],
+    // Grupo F
+    ["Holanda","nl"],["Japão","jp"],["Suécia","se"],["Tunísia","tn"],
+    // Grupo G
+    ["Bélgica","be"],["Egito","eg"],["Irã","ir"],["Nova Zelândia","nz"],
+    // Grupo H
+    ["Espanha","es"],["Cabo Verde","cv"],["Arábia Saudita","sa"],["Uruguai","uy"],
+    // Grupo I
+    ["França","fr"],["Senegal","sn"],["Iraque","iq"],["Noruega","no"],
+    // Grupo J
+    ["Argentina","ar"],["Argélia","dz"],["Áustria","at"],["Jordânia","jo"],
+    // Grupo K
+    ["Portugal","pt"],["RD Congo","cd"],["Uzbequistão","uz"],["Colômbia","co"],
+    // Grupo L
+    ["Inglaterra","gb-eng"],["Croácia","hr"],["Gana","gh"],["Panamá","pa"]
+  ];
+  var GRUPOS=["A","A","A","A","B","B","B","B","C","C","C","C","D","D","D","D",
+    "E","E","E","E","F","F","F","F","G","G","G","G","H","H","H","H",
+    "I","I","I","I","J","J","J","J","K","K","K","K","L","L","L","L"];
+  var SECOES=[];
+  PAISES.forEach(function(p,i){
+    SECOES.push({id:p[1],tipo:"pais",nome:p[0],code:p[1],n:20,grupo:GRUPOS[i]});
+  });
+  SECOES.push({id:"fwc",tipo:"esp",nome:"FWC (especiais)",icone:"🏆",n:20});
+  SECOES.push({id:"cola",tipo:"esp",nome:"Coca-Cola",icone:"🥤",n:14});
+
+  var TOTAL=SECOES.reduce(function(a,s){return a+s.n;},0);
+
+  // ---- Estado ----
+  var LS_DADOS="copa26_dados_v2";
+  var LS_FECHADAS="copa26_fechadas_v2";
+  var dados={}, fechadas={};
+  try{ dados=JSON.parse(localStorage.getItem(LS_DADOS))||{}; }catch(e){ dados={}; }
+  try{ fechadas=JSON.parse(localStorage.getItem(LS_FECHADAS))||{}; }catch(e){ fechadas={}; }
+  var filtro="todas", termo="";
+
+  var cont=document.getElementById("secoes");
+  var vazio=document.getElementById("vazio");
+  var toastEl=document.getElementById("toast");
+  var toastTimer=null;
+
+  function key(sec,n){return sec+"-"+n;}
+  function qtd(sec,n){return dados[key(sec,n)]||0;}
+  function salvar(){localStorage.setItem(LS_DADOS,JSON.stringify(dados));}
+  function salvarFechadas(){localStorage.setItem(LS_FECHADAS,JSON.stringify(fechadas));}
+  function semAcento(s){return s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();}
+
+  function toast(msg){
+    toastEl.textContent=msg;toastEl.classList.add("on");
+    clearTimeout(toastTimer);toastTimer=setTimeout(function(){toastEl.classList.remove("on");},1800);
+  }
+
+  function statsSecao(s){
+    var tenho=0,rep=0;
+    for(var n=1;n<=s.n;n++){var q=qtd(s.id,n);if(q>=1)tenho++;if(q>=2)rep+=q-1;}
+    return {tenho:tenho,rep:rep};
+  }
+
+  function atualizarStats(){
+    var tenho=0,rep=0;
+    SECOES.forEach(function(s){var e=statsSecao(s);tenho+=e.tenho;rep+=e.rep;});
+    var falta=TOTAL-tenho;
+    var pct=Math.round(tenho/TOTAL*100);
+    document.getElementById("st-tenho").textContent=tenho;
+    document.getElementById("st-falta").textContent=falta;
+    document.getElementById("st-rep").textContent=rep;
+    document.getElementById("st-pct").textContent=pct+"%";
+    document.getElementById("barra").style.width=pct+"%";
+  }
+
+  function slotVisivel(s,n){
+    var q=qtd(s.id,n);
+    if(filtro==="falta"&&q>=1)return false;
+    if(filtro==="tenho"&&q<1)return false;
+    if(filtro==="rep"&&q<2)return false;
+    return true;
+  }
+
+  function flagHTML(s){
+    if(s.tipo==="esp")return '<span class="esp">'+(s.icone||"⭐")+'</span>';
+    return '<img class="flag" loading="lazy" alt="" src="https://flagcdn.com/w40/'+s.code+'.png" '+
+           'onerror="this.style.visibility=\'hidden\'">';
+  }
+
+  function render(){
+    var html=[];
+    var algum=false;
+    SECOES.forEach(function(s){
+      if(termo!==""&&semAcento(s.nome).indexOf(termo)<0)return;
+      // slots que passam no filtro
+      var slots=[];
+      for(var n=1;n<=s.n;n++){
+        if(!slotVisivel(s,n))continue;
+        var q=qtd(s.id,n);
+        var cls="cel"+(q>=1?" tenho":"");
+        var badge=q>=2?('<span class="badge">+'+(q-1)+'</span>'):"";
+        slots.push('<div class="'+cls+'" data-sec="'+s.id+'" data-n="'+n+'">'+n+badge+'</div>');
+      }
+      // se filtro ativo escondeu tudo da seção, não mostra a seção
+      if(filtro!=="todas"&&slots.length===0)return;
+      algum=true;
+      var e=statsSecao(s);
+      var completa=e.tenho===s.n;
+      var pct=Math.round(e.tenho/s.n*100);
+      var fechada=fechadas[s.id];
+      html.push(
+        '<div class="secao'+(fechada?" fechada":"")+(completa?" completa":"")+'" data-sid="'+s.id+'">'+
+          '<div class="sec-head" data-toggle="'+s.id+'">'+
+            flagHTML(s)+
+            (s.grupo?'<span class="gtag">'+s.grupo+'</span>':'')+
+            '<span class="nome">'+s.nome+(completa?" ✅":"")+'</span>'+
+            '<span class="prog">'+e.tenho+'/'+s.n+'</span>'+
+            '<span class="chev">▼</span>'+
+          '</div>'+
+          '<div class="mini"><i style="width:'+pct+'%"></i></div>'+
+          '<div class="sec-body">'+slots.join("")+'</div>'+
+        '</div>'
+      );
+    });
+    cont.innerHTML=html.join("");
+    if(!algum){
+      cont.style.display="none";vazio.style.display="block";
+      vazio.textContent = termo!=="" ? "Nenhuma seleção com esse nome." :
+        (filtro==="falta"?"Você não está devendo nenhuma. 🎉":
+         filtro==="rep"?"Você não tem repetidas ainda.":
+         filtro==="tenho"?"Você ainda não marcou nenhuma.":"Nada por aqui.");
+    }else{cont.style.display="block";vazio.style.display="none";}
+  }
+
+  // ---- Interação nos slots ----
+  var pressTimer=null,longPress=false,alvoSec=null,alvoN=null;
+  function achar(e){
+    var el=e.target.closest(".cel");
+    if(!el)return null;
+    return {sec:el.getAttribute("data-sec"),n:parseInt(el.getAttribute("data-n"),10)};
+  }
+  cont.addEventListener("pointerdown",function(e){
+    var a=achar(e);if(!a)return;
+    alvoSec=a.sec;alvoN=a.n;longPress=false;
+    pressTimer=setTimeout(function(){
+      longPress=true;delete dados[key(a.sec,a.n)];
+      salvar();render();atualizarStats();
+      if(navigator.vibrate)navigator.vibrate(30);
+      toast("Marcada como falta");
+    },500);
+  });
+  cont.addEventListener("pointerup",function(e){
+    clearTimeout(pressTimer);
+    var a=achar(e);
+    if(!a||a.sec!==alvoSec||a.n!==alvoN){alvoSec=alvoN=null;return;}
+    if(longPress){longPress=false;alvoSec=alvoN=null;return;}
+    dados[key(a.sec,a.n)]=qtd(a.sec,a.n)+1;
+    salvar();render();atualizarStats();
+    alvoSec=alvoN=null;
+  });
+  cont.addEventListener("pointercancel",function(){clearTimeout(pressTimer);});
+  cont.addEventListener("pointerleave",function(){clearTimeout(pressTimer);});
+  cont.addEventListener("contextmenu",function(e){if(e.target.closest(".cel"))e.preventDefault();});
+
+  // ---- Recolher/expandir seção ----
+  cont.addEventListener("click",function(e){
+    var h=e.target.closest(".sec-head");
+    if(!h)return;
+    var id=h.getAttribute("data-toggle");
+    if(fechadas[id])delete fechadas[id];else fechadas[id]=1;
+    salvarFechadas();
+    var sec=h.closest(".secao");
+    sec.classList.toggle("fechada");
+  });
+
+  // ---- Filtros ----
+  document.querySelectorAll(".filtros button").forEach(function(b){
+    b.addEventListener("click",function(){
+      document.querySelectorAll(".filtros button").forEach(function(x){x.classList.remove("ativo");});
+      b.classList.add("ativo");filtro=b.getAttribute("data-f");render();
+    });
+  });
+  // ---- Busca ----
+  document.getElementById("busca").addEventListener("input",function(e){
+    termo=semAcento(e.target.value.trim());render();
+  });
+
+  // ---- Copiar as que faltam ----
+  document.getElementById("copiarFalta").addEventListener("click",function(){
+    var linhas=[],totalFalta=0;
+    SECOES.forEach(function(s){
+      var faltam=[];
+      for(var n=1;n<=s.n;n++){if(qtd(s.id,n)<1)faltam.push(n);}
+      if(faltam.length){linhas.push(s.nome+": "+faltam.join(", "));totalFalta+=faltam.length;}
+    });
+    if(!totalFalta){toast("Você não está devendo nenhuma! 🎉");return;}
+    var texto="Figurinhas que faltam ("+totalFalta+"):\n"+linhas.join("\n");
+    copiar(texto,totalFalta);
+  });
+  function copiar(texto,q){
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(texto).then(function(){toast("Lista copiada! ("+q+" figurinhas)");},
+        function(){fallback(texto,q);});
+    }else fallback(texto,q);
+  }
+  function fallback(texto,q){
+    var ta=document.createElement("textarea");ta.value=texto;document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");toast("Lista copiada! ("+q+" figurinhas)");}catch(e){toast("Copie manualmente");}
+    document.body.removeChild(ta);
+  }
+
+  // ---- Modal ----
+  var modalBg=document.getElementById("modalBg");
+  document.getElementById("abrirConfig").addEventListener("click",function(){
+    document.getElementById("resumoConfig").innerHTML=
+      "<b>Seu álbum:</b> "+PAISES.length+" seleções × 20 = "+(PAISES.length*20)+
+      " &nbsp;+&nbsp; FWC 20 &nbsp;+&nbsp; Coca-Cola 14 &nbsp;=&nbsp; <b>"+TOTAL+" figurinhas</b>.";
+    modalBg.classList.add("on");
+  });
+  document.getElementById("fecharConfig").addEventListener("click",function(){modalBg.classList.remove("on");});
+  modalBg.addEventListener("click",function(e){if(e.target===modalBg)modalBg.classList.remove("on");});
+  document.getElementById("zerarTudo").addEventListener("click",function(){
+    if(confirm("Tem certeza? Isso apaga todas as marcações e recomeça do zero.")){
+      dados={};salvar();modalBg.classList.remove("on");render();atualizarStats();toast("Tudo zerado. Bom álbum!");
+    }
+  });
+
+  render();atualizarStats();
+})();
+</script>
+</body>
+</html>
