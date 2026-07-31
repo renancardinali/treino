@@ -186,6 +186,29 @@
   .card.exdone{opacity:.62}
   .card.exdone .ex-name{text-decoration:line-through;text-decoration-color:var(--muted)}
 
+  /* session chrono */
+  .sessbtn{
+    border:1.5px solid var(--accent);background:transparent;color:var(--accent);
+    font-weight:800;font-size:13px;padding:10px 12px;border-radius:11px;white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .sessbtn.run{background:var(--accent);color:#fff}
+  .sessbtn.run .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#fff;margin-right:5px;animation:pulse 1.2s infinite}
+  @keyframes pulse{50%{opacity:.25}}
+  .sessbtn:active{transform:scale(.97)}
+  .dayhead .btns{display:flex;gap:8px;align-items:center}
+
+  /* week progress */
+  .wk{overflow:hidden}
+  .wk .fillbar{position:absolute;left:0;right:0;bottom:0;height:3px;background:transparent}
+  .wk .fillbar i{display:block;height:100%;background:var(--accent2);border-radius:99px}
+  .wk.full{border-color:var(--accent2)}
+  .wk.full:not(.active){color:var(--accent2)}
+  .wk.full.active{background:var(--accent2);color:#062a12;border-color:var(--accent2)}
+  .wk small.ok{color:var(--accent2);opacity:1;font-weight:900}
+  .wk.active small.ok{color:#062a12}
+  .wk.full.active .fillbar i{background:#062a12}
+
   /* backup */
   .sbreak2{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin:20px 2px 10px}
   .backup{display:flex;gap:8px}
@@ -209,7 +232,7 @@
 </header>
 
 <main>
-  <div class="dayhead"><div class="name" id="dayName"></div><button id="doneBtn" class="donebtn" onclick="toggleDone()">Concluir treino do dia</button></div>
+  <div class="dayhead"><div class="name" id="dayName"></div><div class="btns"><button id="sessBtn" class="sessbtn" onclick="sessTap()">▶ Iniciar</button><button id="doneBtn" class="donebtn" onclick="toggleDone()">Concluir treino do dia</button></div></div>
   <div id="deloadNote" class="deload-note" style="display:none">Semana de DELOAD — reduza carga e volume. Recuperação.</div>
   <div id="list"></div>
 </main>
@@ -260,11 +283,60 @@ function lastFilled(d,w,i){
   return null;
 }
 function isDone(d,w){ return !!(((state.done||{})[d]||{})[w]); }
+function getDur(d,w){ return (((state.dur||{})[d]||{})[w]) || 0; }
 function toggleDone(){
   state.done=state.done||{}; state.done[day]=state.done[day]||{};
-  if(state.done[day][week]) delete state.done[day][week];
-  else state.done[day][week]=Date.now();
-  save(); renderTabs(); renderDoneBtn();
+  if(state.done[day][week]){
+    delete state.done[day][week];
+    if(state.dur&&state.dur[day]) delete state.dur[day][week];
+  } else {
+    state.done[day][week]=Date.now();
+    if(state.sess){
+      const secs=Math.round((Date.now()-state.sess.start)/1000);
+      state.dur=state.dur||{}; state.dur[day]=state.dur[day]||{};
+      state.dur[day][week]=secs;
+      state.sess=null;
+      if(navigator.vibrate)navigator.vibrate([60,40,60]);
+    }
+  }
+  save(); renderTabs(); renderWeeks(); renderDoneBtn(); renderSess();
+}
+
+/* ---------- Session chronometer ---------- */
+let sessTick=null;
+function fmtDur(s){
+  if(!s)return '0min';
+  const h=Math.floor(s/3600), m=Math.round((s%3600)/60);
+  if(h>0) return h+'h'+String(m).padStart(2,'0');
+  return m+'min';
+}
+function fmtClock(s){
+  const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss=s%60;
+  return (h>0? h+':'+String(m).padStart(2,'0') : m)+':'+String(ss).padStart(2,'0');
+}
+function sessTap(){
+  if(state.sess){
+    if(confirm('Cancelar o cronômetro? O tempo desta sessão será descartado. (Para registrar, use "Concluir treino do dia".)')){
+      state.sess=null; save(); renderSess();
+    }
+  } else {
+    state.sess={start:Date.now(), day:day, week:week};
+    save(); renderSess();
+    if(navigator.vibrate)navigator.vibrate(20);
+  }
+}
+function renderSess(){
+  const b=document.getElementById('sessBtn'); if(!b)return;
+  clearInterval(sessTick); sessTick=null;
+  if(state.sess){
+    const upd=()=>{ b.innerHTML='<span class="dot"></span>'+fmtClock(Math.round((Date.now()-state.sess.start)/1000)); };
+    b.className='sessbtn run'; upd();
+    sessTick=setInterval(()=>{ if(state.sess)upd(); else {clearInterval(sessTick);renderSess();} },1000);
+  } else {
+    const d=getDur(day,week);
+    b.className='sessbtn';
+    b.textContent = (isDone(day,week)&&d) ? '⏱ '+fmtDur(d) : '▶ Iniciar';
+  }
 }
 function isExDone(d,w,i){ return !!((((state.exdone||{})[d]||{})[w]||{})[i]); }
 function toggleEx(i){
@@ -287,16 +359,20 @@ function openSummary(){
   const done=state.done||{}, nd=DATA.days.length;
   const now=Date.now(), wk7=now-7*864e5;
   const D=new Date(), m0=new Date(D.getFullYear(),D.getMonth(),1).getTime();
-  let total=0,last7=0,month=0; const perWeek={};
+  let total=0,last7=0,month=0; const perWeek={}, timeWeek={};
+  let timeTotal=0, timeCount=0;
   Object.keys(done).forEach(d=>Object.keys(done[d]).forEach(w=>{
     const ts=done[d][w]; total++; if(ts>=wk7)last7++; if(ts>=m0)month++;
     perWeek[w]=(perWeek[w]||0)+1;
+    const du=getDur(d,w);
+    if(du){ timeTotal+=du; timeCount++; timeWeek[w]=(timeWeek[w]||0)+du; }
   }));
+  const timeAvg = timeCount>0 ? Math.round(timeTotal/timeCount) : 0;
   let cur=0; for(let i=0;i<nd;i++) if(isDone(i,week))cur++;
   let rows='';
   for(let w=1;w<=DATA.weeks;w++){
-    const c=perWeek[w]||0, dl=DATA.deload.includes(w);
-    rows+=`<div class="srow${dl?' dl':''}"><span>Semana ${w}${dl?' · deload':''}</span><b>${c}/${nd}</b><div class="sbar"><i style="width:${Math.round(c/nd*100)}%"></i></div></div>`;
+    const c=perWeek[w]||0, dl=DATA.deload.includes(w), tw=timeWeek[w]||0;
+    rows+=`<div class="srow${dl?' dl':''}"><span>Semana ${w}${dl?' · deload':''}${tw?' · ⏱ '+fmtDur(tw):''}</span><b>${c>=nd?'✓ ':''}${c}/${nd}</b><div class="sbar"><i style="width:${Math.round(c/nd*100)}%"></i></div></div>`;
   }
   document.getElementById('summaryBody').innerHTML=`
     <div class="scards">
@@ -304,6 +380,8 @@ function openSummary(){
       <div class="scard"><div class="n">${last7}</div><div class="l">Últimos 7 dias</div></div>
       <div class="scard"><div class="n">${month}</div><div class="l">Este mês</div></div>
       <div class="scard"><div class="n">${total}</div><div class="l">Total no ciclo</div></div>
+      <div class="scard"><div class="n">${fmtDur(timeTotal)}</div><div class="l">⏱ Tempo total</div></div>
+      <div class="scard"><div class="n">${fmtDur(timeAvg)}</div><div class="l">⏱ Média por treino</div></div>
     </div>
     <div class="sbreak">Treinos por semana do plano</div>
     ${rows}
@@ -359,13 +437,22 @@ function renderTabs(){
     b.onclick=()=>{day=i;save();renderAll();window.scrollTo(0,0)}; t.appendChild(b);
   });
 }
+function weekCount(w){
+  const nd=DATA.days.length; let c=0;
+  for(let d=0;d<nd;d++) if(isDone(d,w))c++;
+  return c;
+}
 function renderWeeks(){
   const w=document.getElementById('weekbar'); w.innerHTML='';
+  const nd=DATA.days.length;
   for(let i=1;i<=DATA.weeks;i++){
     const dl=DATA.deload.includes(i);
+    const c=weekCount(i), full=c>=nd;
     const b=document.createElement('button');
-    b.className='wk'+(i===week?' active':'')+(dl?' deload':'');
-    b.innerHTML=i+(dl?'<small>deload</small>':'<small>&nbsp;</small>');
+    b.className='wk'+(i===week?' active':'')+(dl?' deload':'')+(full?' full':'');
+    const small = full ? '<small class="ok">✓</small>' : (dl?'<small>deload</small>':(c>0?'<small>'+c+'/'+nd+'</small>':'<small>&nbsp;</small>'));
+    const bar = (!full&&c>0) ? '<span class="fillbar"><i style="width:'+Math.round(c/nd*100)+'%"></i></span>' : (full?'<span class="fillbar"><i style="width:100%"></i></span>':'');
+    b.innerHTML=i+small+bar;
     b.onclick=()=>{week=i;save();renderAll()}; w.appendChild(b);
   }
 }
@@ -427,7 +514,7 @@ function onInput(i,k,el){
   setCell(day,week,i,k,el.value);
   el.classList.toggle('filled', !!el.value);
 }
-function renderAll(){ renderTabs(); renderWeeks(); renderList(); renderDoneBtn(); }
+function renderAll(){ renderTabs(); renderWeeks(); renderList(); renderDoneBtn(); renderSess(); }
 
 /* ---------- Rest timer ---------- */
 let total=60,left=60,tick=null,paused=false,alerted=false,endAt=0;
